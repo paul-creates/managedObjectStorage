@@ -1,7 +1,9 @@
+import { fileOperations } from "../database/fileOperations";
+
 export const createFile = (_: undefined, { name }: { name: string }) => {
-  // For now, this is a no-op implementation that just returns the input data
+  const fileRecord = fileOperations.createFile(name);
   return {
-    id: `file-${Date.now()}`, // Generate a simple unique ID
-    name,
+    id: fileRecord.id.toString(),
+    name: fileRecord.filename,
   };
 };
