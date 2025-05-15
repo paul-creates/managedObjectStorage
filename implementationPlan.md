@@ -1,126 +1,33 @@
-# GraphQL Server Implementation Plan
+# Implementation Plan: File Creation Mutation
 
 ## Overview
 
-This document outlines the steps to create a basic GraphQL server using TypeScript, Node.js, and Apollo Server. The server will implement a simple "helloWorld" query that returns a hardcoded string.
+This plan outlines the steps to implement a mutation that allows creating new files in the managed object storage system.
 
-## Prerequisites
+## Technical Requirements
 
-- Node.js (v14 or higher)
-- npm or yarn package manager
-- TypeScript knowledge
-- Basic understanding of GraphQL concepts
+### 1. Schema Updates
 
-## Implementation Steps
-
-### 1. Project Setup
-
-1. Navigate to the existing `server` directory
-2. Initialize a new Node.js project:
-   ```bash
-   npm init -y
-   ```
-3. Install required dependencies:
-   ```bash
-   npm install @apollo/server graphql typescript @types/node
-   ```
-4. Install development dependencies:
-   ```bash
-   npm install --save-dev ts-node nodemon @types/graphql
-   ```
-
-### 2. TypeScript Configuration
-
-1. Create a `tsconfig.json` file with the following configuration:
-   ```json
-   {
-     "compilerOptions": {
-       "target": "es2020",
-       "module": "commonjs",
-       "strict": true,
-       "esModuleInterop": true,
-       "skipLibCheck": true,
-       "forceConsistentCasingInFileNames": true,
-       "outDir": "./dist",
-       "rootDir": "./src"
-     },
-     "include": ["src/**/*"],
-     "exclude": ["node_modules"]
-   }
-   ```
-
-### 3. Project Structure
-
-Create the following directory structure:
-
-```
-src/
-  ├── index.ts
-  ├── schema/
-  │   └── typeDefs.ts
-  └── resolvers/
-      └── index.ts
-```
-
-### 4. Implementation Details
-
-#### 4.1 Schema Definition (src/schema/typeDefs.ts)
-
-Create the GraphQL schema with the helloWorld query:
-
-```typescript
-export const typeDefs = `#graphql
-  type Query {
-    helloWorld: String!
+- Add new mutation type in `server/src/schema/mutations.graphql`:
+  ```graphql
+  type Mutation {
+    createFile(name: String!, content: String!): File!
   }
-`;
-```
+  ```
 
-#### 4.2 Resolver Implementation (src/resolvers/index.ts)
+### 2. Type Definitions
 
-Implement the resolver for the helloWorld query:
-
-```typescript
-export const resolvers = {
-  Query: {
-    helloWorld: () => "Hello!",
-  },
-};
-```
-
-#### 4.3 Server Setup (src/index.ts)
-
-Create the Apollo Server instance:
-
-```typescript
-import { ApolloServer } from "@apollo/server";
-import { startStandaloneServer } from "@apollo/server/standalone";
-import { typeDefs } from "./schema/typeDefs";
-import { resolvers } from "./resolvers";
-
-async function startServer() {
-  const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-  });
-
-  const { url } = await startStandaloneServer(server);
-  console.log(`🚀 Server ready at ${url}`);
-}
-
-startServer();
-```
-
-### 5. Scripts Configuration
-
-Add the following scripts to `package.json`:
-
-```json
-{
-  "scripts": {
-    "start": "node dist/index.js",
-    "dev": "nodemon src/index.ts",
-    "build": "tsc"
+- Ensure File type exists in schema with necessary fields:
+  ```graphql
+  type File {
+    id: ID!
+    name: String!
+    content: String!
   }
-}
-```
+  ```
+
+### 3. Resolver Implementation
+
+- Create new resolver in `server/src/resolvers/mutations.ts`:
+  - Implement `createFile` mutation resolver
+  - The resolver is simply a no-op or a loopback. No actual file creation needs to happen at this point.
