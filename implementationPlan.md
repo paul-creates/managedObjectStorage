@@ -1,98 +1,126 @@
-# Implementation Plan for Managed Object Storage Web Application
+# GraphQL Server Implementation Plan
 
-## Project Overview
+## Overview
 
-This implementation plan outlines the steps to create a web application with a TypeScript-based frontend and backend, using React and Express respectively, with SQLite as the database.
+This document outlines the steps to create a basic GraphQL server using TypeScript, Node.js, and Apollo Server. The server will implement a simple "helloWorld" query that returns a hardcoded string.
 
 ## Prerequisites
 
-- Node.js (v18 or later)
-- npm or yarn
-
-## Project Structure
-
-```
-managedObjectStorage/
-├── client/                 # Frontend React application
-│   ├── src/
-│   ├── package.json
-│   └── tsconfig.json
-├── server/                 # Backend Express application
-│   ├── src/
-│   ├── package.json
-│   ├── tsconfig.json
-│   └── data/              # SQLite database files
-└── README.md
-```
+- Node.js (v14 or higher)
+- npm or yarn package manager
+- TypeScript knowledge
+- Basic understanding of GraphQL concepts
 
 ## Implementation Steps
 
-### 1. Project Setup (Day 1)
+### 1. Project Setup
 
-1. Initialize project structure
+1. Navigate to the existing `server` directory
+2. Initialize a new Node.js project:
+   ```bash
+   npm init -y
+   ```
+3. Install required dependencies:
+   ```bash
+   npm install @apollo/server graphql typescript @types/node
+   ```
+4. Install development dependencies:
+   ```bash
+   npm install --save-dev ts-node nodemon @types/graphql
+   ```
 
-   - Create client and server directories
-   - Create .gitignore file
+### 2. TypeScript Configuration
 
-2. Backend Setup
+1. Create a `tsconfig.json` file with the following configuration:
+   ```json
+   {
+     "compilerOptions": {
+       "target": "es2020",
+       "module": "commonjs",
+       "strict": true,
+       "esModuleInterop": true,
+       "skipLibCheck": true,
+       "forceConsistentCasingInFileNames": true,
+       "outDir": "./dist",
+       "rootDir": "./src"
+     },
+     "include": ["src/**/*"],
+     "exclude": ["node_modules"]
+   }
+   ```
 
-   - Initialize Node.js project with TypeScript
-   - Set up Express server
-   - Configure TypeScript
-   - Set up basic middleware (cors, body-parser)
-   - Create initial server configuration
+### 3. Project Structure
 
-3. Frontend Setup
-   - Create React application with TypeScript
-   - Set up Apollo Client
-   - Configure TypeScript
-   - Set up basic project structure
+Create the following directory structure:
 
-### 2. Backend Implementation (Day 2)
+```
+src/
+  ├── index.ts
+  ├── schema/
+  │   └── typeDefs.ts
+  └── resolvers/
+      └── index.ts
+```
 
-1. Create basic Express server
+### 4. Implementation Details
 
-   - Set up server entry point
-   - Configure environment variables
-   - Implement basic error handling
+#### 4.1 Schema Definition (src/schema/typeDefs.ts)
 
-2. Implement Hello World API
+Create the GraphQL schema with the helloWorld query:
 
-   - Create API route for /api/hello
-   - Implement GET endpoint returning "Hello!"
-   - Add basic request validation
-   - Add API documentation
+```typescript
+export const typeDefs = `#graphql
+  type Query {
+    helloWorld: String!
+  }
+`;
+```
 
-3. Database Setup
-   - Set up SQLite database
-   - Create database configuration
-   - Implement database connection
-   - Add database error handling
+#### 4.2 Resolver Implementation (src/resolvers/index.ts)
 
-### 3. Frontend Implementation (Day 3)
+Implement the resolver for the helloWorld query:
 
-1. Set up Apollo Client
+```typescript
+export const resolvers = {
+  Query: {
+    helloWorld: () => "Hello!",
+  },
+};
+```
 
-   - Configure Apollo Client
-   - Set up GraphQL endpoint
-   - Implement basic error handling
+#### 4.3 Server Setup (src/index.ts)
 
-2. Create Hello World Component
+Create the Apollo Server instance:
 
-   - Create basic React component
-   - Implement Apollo query
-   - Add loading and error states
-   - Style component
+```typescript
+import { ApolloServer } from "@apollo/server";
+import { startStandaloneServer } from "@apollo/server/standalone";
+import { typeDefs } from "./schema/typeDefs";
+import { resolvers } from "./resolvers";
 
-3. Set up basic routing
-   - Implement React Router
-   - Create basic layout
-   - Add navigation structure
+async function startServer() {
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+  });
 
-### 4. Documentation (Day 4)
+  const { url } = await startStandaloneServer(server);
+  console.log(`🚀 Server ready at ${url}`);
+}
 
-3. Documentation
-   - Update README with setup instructions
-   - Add API documentation
-   - Document environment variables
-   - Add local development instructions
+startServer();
+```
+
+### 5. Scripts Configuration
+
+Add the following scripts to `package.json`:
+
+```json
+{
+  "scripts": {
+    "start": "node dist/index.js",
+    "dev": "nodemon src/index.ts",
+    "build": "tsc"
+  }
+}
+```

@@ -1,39 +1,16 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import objectsRouter from "./routes/objects";
+import { ApolloServer } from "@apollo/server";
+import { startStandaloneServer } from "@apollo/server/standalone";
+import { typeDefs } from "./schema/typeDefs";
+import { resolvers } from "./resolvers";
 
-// Load environment variables
-dotenv.config();
+async function startServer() {
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+  });
 
-const app = express();
-const port = process.env.PORT || 3001;
+  const { url } = await startStandaloneServer(server);
+  console.log(`🚀 Server ready at ${url}`);
+}
 
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-// Routes
-app.use("/api/objects", objectsRouter);
-
-// Hello World route
-app.get("/api/hello", (req, res) => {
-  res.json({ message: "Hello!" });
-});
-
-// Basic error handling middleware
-app.use(
-  (
-    err: Error,
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) => {
-    console.error(err.stack);
-    res.status(500).json({ error: "Something went wrong!" });
-  }
-);
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+startServer();
