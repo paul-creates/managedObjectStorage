@@ -1,4 +1,4 @@
 export const DB_CONFIG = {
-  database: "file_metadata.db",
+  database: "database.db",
   // Add more configuration options as needed
 };
