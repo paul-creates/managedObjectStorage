@@ -1,14 +1,9 @@
+import { Query } from "./types/Query";
+import { Mutation } from "./types/Mutation";
+import { File } from "./types/File";
+
 export const typeDefs = `#graphql
-  type Query {
-    helloWorld: String!
-  }
-
-  type File {
-    id: ID!
-    name: String!
-  }
-
-  type Mutation {
-    createFile(name: String!): File!
-  }
+  ${Query}
+  ${File}
+  ${Mutation}
 `;
