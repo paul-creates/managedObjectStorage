@@ -2,6 +2,25 @@
 
 A GraphQL-based object storage management system built with TypeScript and Apollo Server.
 
+## Why you chose to implement what you did
+
+This server is self-contained, fully functional, and can be expanded upon easily. It could be completed within the time constraints. It forms the base and core of the full feature.
+
+## Considerations, decisions, assumptions you made
+
+- I decided to use significant Cursor assist to bring up the boilerplate of the server
+- I decided to omit any kind of auth, or even the concept of a user as that can be added later
+- I went with sqlite as it simplifies the development environment, however it would not be used in the production system
+- I went with GraphQL as it'd be used in the complete feature. GraphQL can allow shared type definitions between the client and server
+- Tests were omitted based on the interview environment, but would be included in real production code
+
+Note: The timestamps on git commits don't accurately reflect the time I spent on this code. Coding was interrupted by helping a kid make their bed, singing bedtime songs, and consoling an upset kid.
+
+## The next few improvements you’d make, and what challenges might exist
+
+Next up would likely be a frontend for the files. Additionaly file paths could be added, as well as file ownership. File ownership would need to include both the organization, and the user.
+File paths have a challenge in that the heirarchy must now be handled across the board.
+
 ## Development Setup
 
 ### Prerequisites
