@@ -1,14 +1,11 @@
+import { helloWorld } from "./helloWorld";
+import { createFile } from "./createFile";
+
 export const resolvers = {
   Query: {
-    helloWorld: () => "Hello!",
+    helloWorld,
   },
   Mutation: {
-    createFile: (_: any, { name }: { name: string }) => {
-      // For now, this is a no-op implementation that just returns the input data
-      return {
-        id: `file-${Date.now()}`, // Generate a simple unique ID
-        name,
-      };
-    },
+    createFile,
   },
 };
