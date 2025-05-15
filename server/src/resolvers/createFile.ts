@@ -5,5 +5,7 @@ export const createFile = (_: undefined, { name }: { name: string }) => {
   return {
     id: fileRecord.id.toString(),
     name: fileRecord.filename,
+    createdAt: fileRecord.created_at,
+    updatedAt: fileRecord.updated_at,
   };
 };

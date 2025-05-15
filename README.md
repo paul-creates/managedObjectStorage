@@ -62,7 +62,7 @@ You can interact with the database directly using the SQLite command-line tool:
 
 ```bash
 # Connect to the database
-sqlite3 server/file_metadata.db
+sqlite3 server/database.db
 
 # Once connected, you can run SQL queries:
 SELECT * FROM files;
@@ -78,3 +78,91 @@ DELETE FROM files WHERE id = 1;
 ```
 
 The database is automatically initialized when the server starts, creating the necessary tables if they don't exist.
+
+## GraphQL API
+
+The server provides a GraphQL API for managing files. You can access the GraphQL playground at `http://localhost:4000/graphql` when the server is running.
+
+### Available Operations
+
+#### Queries
+
+- `file(id: ID!)`: Get a single file by ID
+- `files`: Get all files
+
+#### Mutations
+
+- `createFile(name: String!)`: Create a new file
+- `updateFile(id: ID!, name: String!)`: Update an existing file
+- `deleteFile(id: ID!)`: Delete a file
+
+### Example Queries
+
+#### Create a File
+
+```graphql
+mutation {
+  createFile(name: "example.txt") {
+    id
+    name
+    createdAt
+    updatedAt
+  }
+}
+```
+
+#### Get a File
+
+```graphql
+query {
+  file(id: "1") {
+    id
+    name
+    createdAt
+    updatedAt
+  }
+}
+```
+
+#### Get All Files
+
+```graphql
+query {
+  files {
+    id
+    name
+    createdAt
+    updatedAt
+  }
+}
+```
+
+#### Update a File
+
+```graphql
+mutation {
+  updateFile(id: "1", name: "updated.txt") {
+    id
+    name
+    createdAt
+    updatedAt
+  }
+}
+```
+
+#### Delete a File
+
+```graphql
+mutation {
+  deleteFile(id: "1")
+}
+```
+
+### Error Handling
+
+The API uses standard GraphQL error handling with the following error codes:
+
+- `NOT_FOUND`: When a requested file doesn't exist
+- `INTERNAL_SERVER_ERROR`: When an unexpected error occurs
+
+Error responses include a message and an error code that can be used for error handling in client applications.

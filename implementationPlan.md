@@ -1,31 +1,130 @@
-# SQLite Database Implementation Plan
+# GraphQL CRUD Implementation Plan
 
-## Overview
+## 1. Schema Updates
 
-This plan outlines the steps to implement SQLite database storage for managing file metadata and tracking created files in the system.
+### File Type
 
-## Database Schema
-
-### Files Table
-
-```sql
-CREATE TABLE files (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    filename TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+```graphql
+type File {
+  id: ID!
+  name: String!
+  createdAt: String!
+  updatedAt: String!
+}
 ```
 
-## Implementation Steps
+### Query Type
 
-1. **Database Setup**
+```graphql
+type Query {
+  file(id: ID!): File
+  files: [File!]!
+}
+```
 
-   - Add SQLite dependency to the project
-   - Create database initialization script
-   - Implement database connection management
-   - Add database configuration options
+### Mutation Type
 
-2. **Integration with Existing System**
+```graphql
+type Mutation {
+  createFile(name: String!): File!
+  updateFile(id: ID!, name: String!): File
+  deleteFile(id: ID!): Boolean!
+}
+```
 
-   - Modify file creation process to store metadata in database
+## 2. Implementation Steps
+
+### Step 1: Update Schema Files
+
+1. Update `server/src/schema/types/File.ts` to include new fields
+2. Update `server/src/schema/types/Query.ts` to add file queries
+3. Update `server/src/schema/types/Mutation.ts` to add update and delete mutations
+
+### Step 2: Create Resolvers
+
+1. Create new resolver files:
+
+   - `server/src/resolvers/getFile.ts`
+   - `server/src/resolvers/getFiles.ts`
+   - `server/src/resolvers/updateFile.ts`
+   - `server/src/resolvers/deleteFile.ts`
+
+2. Update `server/src/resolvers/index.ts` to include new resolvers
+
+## 3. Example Queries
+
+### Create File
+
+```graphql
+mutation {
+  createFile(name: "example.txt") {
+    id
+    name
+    createdAt
+    updatedAt
+  }
+}
+```
+
+### Get File
+
+```graphql
+query {
+  file(id: "1") {
+    id
+    name
+    createdAt
+    updatedAt
+  }
+}
+```
+
+### Get All Files
+
+```graphql
+query {
+  files {
+    id
+    name
+    createdAt
+    updatedAt
+  }
+}
+```
+
+### Update File
+
+```graphql
+mutation {
+  updateFile(id: "1", name: "updated.txt") {
+    id
+    name
+    createdAt
+    updatedAt
+  }
+}
+```
+
+### Delete File
+
+```graphql
+mutation {
+  deleteFile(id: "1")
+}
+```
+
+## 5. Validation
+
+Add input validation for:
+
+- File name format
+- ID format
+- Required fields
+
+## 6. Documentation
+
+Update README.md with:
+
+- New GraphQL operations
+- Example queries
+- Error handling information

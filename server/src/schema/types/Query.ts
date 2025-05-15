@@ -1,5 +1,6 @@
 export const Query = `#graphql
   type Query {
-    helloWorld: String!
+    file(id: ID!): File
+    files: [File!]!
   }
 `;
